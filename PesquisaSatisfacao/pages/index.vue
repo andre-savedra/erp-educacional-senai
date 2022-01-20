@@ -7,7 +7,7 @@
       "
     >
       <img src="../assets/media/suga.png" />
-      <h5>Sistema Único de Gestão De Aluno</h5>
+      <h1>Sistema Único de Gestão De Aluno</h1>
     </section>
     <section class="Cadastro_panel">
       <div class="formulario_cadastro">
@@ -15,7 +15,7 @@
         <form action="" class="loginForm" v-on:submit.prevent="sendlogin()">
           <div class="inputcontainer">
             <div class="inputCombo">
-              <label id="lblcpf" for="name">CPF</label>
+              <label id="lblcpf" for="name">LOGIN</label>
               <input type="cpf" v-model="login" id="name" required />
             </div>
             <div class="inputCombo combo2">
@@ -47,18 +47,49 @@ export default {
       console.log(this.login);
       console.log(this.pass);
 
-      // this.$store.dispatch("user/getUser").then((response) => {
-      //   this.actualUser = response[0];
-      //   this.actual_admin = this.actualUser.admin;
-      //   this.$store.dispatch("user/setAdmin", this.actual_admin);
+      this.$store
+        .dispatch("user/getUser", this.login, this.pass)
+        .then((response) => {
 
-      //   this.reloadButtons();
-      //   this.profileLoaded = true;
-      // });
+          switch(response)
+          {
+            case "authorized":
+
+              break;
+
+            case "unauthorized":
+
+              break;
+
+            case "invalid":
+
+              break;
+
+            case "exception":
+
+              break;
+          }
+
+
+          if (response.id > 0) {
+            if (
+              response.identificador === this.login &&
+              response.senha === this.pass
+            ) {
+              this.$router.push("/pshome");
+            } else {
+            }
+          }
+
+          console.log("terminou");
+          //   this.actualUser = response[0];
+          //   this.actual_admin = this.actualUser.admin;
+          //   this.$store.dispatch("user/setAdmin", this.actual_admin);
+
+          //   this.reloadButtons();
+          //   this.profileLoaded = true;
+        });
       // this.$store.dispatch("user/getDjangoUser");
-
-
-
     },
   },
 };
