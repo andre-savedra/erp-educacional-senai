@@ -39,4 +39,8 @@ urlpatterns = [
     path('avancarTurma/', Avancar_turmasAPIView.as_view(), name='avancar_turma'),
 
     path('antecederTurma/', Anteceder_turmasAPIView.as_view(), name='avancar_turma'),
+
+    #jwt changed    
+    path("hello/", HelloView.as_view(), name='hello'),
+
 ]

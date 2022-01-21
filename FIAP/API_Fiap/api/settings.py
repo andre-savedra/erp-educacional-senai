@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "corsheaders",
     'rest_framework',
+    'rest_framework_simplejwt',
     'main',
 ]
 
@@ -144,17 +145,12 @@ MEDIA_URL = 'media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
- 'DEFAULT_PERMISSION_CLASSES': [
-     'rest_framework.permissions.AllowAny',
-     ]
-# 'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.IsAuthenticated',
-#     ),
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-#         'rest_framework.authentication.SessionAuthentication',
-#         'rest_framework.authentication.BasicAuthentication',
-#     ),
+#  'DEFAULT_PERMISSION_CLASSES': [
+#      'rest_framework.permissions.AllowAny',
+#      ]
+'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ], #changed
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
