@@ -2,7 +2,7 @@ import django
 from django.db import models
 import datetime
 import pandas as pd
-
+from django_resized import ResizedImageField
 
 class Turma(models.Model):
     cod_turma = models.CharField(max_length=50, default='')
@@ -34,6 +34,7 @@ class Usuario(models.Model):
                              ('2','Professor'),
                              ('3','Analista'),
                              ('4','Coordenador')))
+    foto_avatar = ResizedImageField(size=[48, 48],upload_to='avatar_image/%y/%m/%d/', blank=True)
 
     def __str__(self):
         return self.nome
@@ -60,7 +61,6 @@ class Fiap(models.Model):
     def __str__(self):
         return str(self.id)
 
-
 class Assinatura(models.Model):
     docente = models.TextField(null=True, default='')
     coordenador = models.TextField(null=True, default='')
@@ -71,7 +71,6 @@ class Assinatura(models.Model):
 
     def __str__(self):
         return str(self.id)
-
 
 class Frequencia(models.Model):
     aulasprevistas = models.IntegerField(null=True, blank=True)

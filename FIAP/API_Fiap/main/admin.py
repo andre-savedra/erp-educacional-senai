@@ -7,8 +7,8 @@ class detAluno(admin.ModelAdmin):
     search_fields = ('nome',)
     list_per_page = 10
 
-class detColaborador(admin.ModelAdmin):
-    list_display = ('id','nome','identificador','senha','nivelAcesso')
+class detUsuario(admin.ModelAdmin):
+    list_display = ('id','nome','identificador','senha','nivelAcesso','foto_avatar')
     list_display_links = ('id',)
     search_fields = ('nome',)
     list_per_page = 10
@@ -95,7 +95,7 @@ class detFormulario(admin.ModelAdmin):
 
 admin.site.register(Turma, detTurma)
 admin.site.register(Aluno,detAluno)
-admin.site.register(Usuario,detColaborador)
+admin.site.register(Usuario,detUsuario)
 admin.site.register(Materia,detMateria)
 admin.site.register(Assinatura,detAssinatura)
 admin.site.register(Fiap,detFiap)
