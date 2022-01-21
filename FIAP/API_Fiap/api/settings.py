@@ -144,11 +144,17 @@ MEDIA_URL = 'media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-'DEFAULT_PERMISSION_CLASSES': [
-    #'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly’,
-    'rest_framework.permissions.AllowAny',
-    # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ]
+ 'DEFAULT_PERMISSION_CLASSES': [
+     'rest_framework.permissions.AllowAny',
+     ]
+# 'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#     ),
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+#         'rest_framework.authentication.SessionAuthentication',
+#         'rest_framework.authentication.BasicAuthentication',
+#     ),
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
