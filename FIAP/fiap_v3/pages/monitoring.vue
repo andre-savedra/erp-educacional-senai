@@ -66,8 +66,9 @@
       },
       getFiap: async function(fiapID){
         const FiapResponse = await axios.get(this.BASE_URL + "fiap/" + fiapID +"/"); 
-        this.getAluno(FiapResponse.data.aluno)
-        this.getTurma(FiapResponse.data.turma)
+        // this.getAluno(FiapResponse.data.aluno) //changed
+        // this.getTurma(FiapResponse.data.turma) //changed       
+        
         //this.getFrequency(fiapID)
         //this.getApprennticeship(fiapID)
       },

@@ -5,7 +5,8 @@
     <div class="sheet">
       <form class="content" @submit.prevent="submitForm">
         <div class="title-sheet">
-          <h1 @click="callA()" >Ficha Individual de Avaliação Periódica</h1>
+          <h1 >Ficha Individual de Avaliação Periódica</h1>
+          <!-- @click="callA()" -->
         </div>
         
         <FieldForm

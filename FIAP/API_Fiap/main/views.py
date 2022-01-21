@@ -89,10 +89,11 @@ class UsuarioAPIView(APIView):
     def get(self, request, pk=''):
         if pk == '':
             colab = Usuario.objects.all()
-            serializer = UsuarioSerializer(colab, many=True)
+            serializer = UsuarioSerializer(colab, many=True)            
             return Response(serializer.data)
         else:
-            colab = Usuario.objects.get(identificador=pk) #changed
+            # colab = Usuario.objects.get(identificador=pk) #changed
+            colab = Usuario.objects.get(id=pk) #changed
             serializer = UsuarioSerializer(colab)
             return Response(serializer.data)
 
