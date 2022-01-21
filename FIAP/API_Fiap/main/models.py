@@ -11,7 +11,11 @@ class Turma(models.Model):
                     choices=(('1','Manhã'),
                              ('2','Tarde'),
                              ('3','Noite')))
+    status = models.CharField(null=True, blank=True, max_length=15, default='1',
+                    choices=(('1','Em andamento'),
+                             ('2','Finalizado')))
     dataInicio = models.DateTimeField(default=datetime.datetime.now(),null=True, blank=True)
+    dataFinal = models.DateTimeField(default=datetime.datetime.now(),null=True, blank=True)
 
     def __str__(self):
         return self.cod_turma

@@ -1,5 +1,5 @@
 import math
-
+import datetime, pytz
 from django.shortcuts import render, redirect
 from .models import Aluno, Usuario, Turma, Fiap, Materia, Frequencia, Assinatura, Observacao, Ocorrencia, \
     Aprendizagem, Aproveitamento
@@ -453,7 +453,7 @@ class ObservacaoAPIView(APIView):
 
 class Avancar_turmasAPIView(APIView):
     def get(self, request):
-        turmas = Turma.objects.all()
+        turmas = Turma.objects.filter(status="1")
         turmas_list = []
         numInArray = 0
         novas_turmas = []
@@ -464,23 +464,35 @@ class Avancar_turmasAPIView(APIView):
 
         for turma in turmas:
             numInArray = 0
-            for carac in str(turma):
-                if carac.isdecimal():
-                    caracter = carac
-                    temp = int(carac) + 1
-                    temp_turma = str(turma)
-                    tur = temp_turma.replace(temp_turma[numInArray], str(temp))
-                    novas_turmas.append(tur)
-                    break
-                numInArray += 1
-            turma_atual = Turma.objects.filter(id=turma.id).first()
-            # print(turma_atual)
-            turma_atualizada = { 'cod_turma' : novas_turmas[-1] }
-            serializer = TurmaSerializer(turma_atual, data=turma_atualizada)
-            serializer.is_valid(raise_exception=True)
-            # print(serializer)
-            # print(serializer.data)
-            serializer.save()
+            # now = pytz.utc.localize(datetime.datetime.now())
+            now = datetime.date.today().strftime('%y-%m-%d')
+            print(turma.dataFinal.strftime('%y-%m-%d'))
+            print(now)
+            # print(turma[0])
+            if now >= turma.dataFinal.strftime('%y-%m-%d') :
+                turma_atual = Turma.objects.filter(id=turma.id).first()
+                turma_atualizada = {'status': "2"}
+                serializer = TurmaSerializer(turma_atual, data=turma_atualizada)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+            else:
+                for carac in str(turma):
+                    if carac.isdecimal():
+                        caracter = carac
+                        temp = int(carac) + 1
+                        temp_turma = str(turma)
+                        tur = temp_turma.replace(temp_turma[numInArray], str(temp))
+                        novas_turmas.append(tur)
+                        break
+                    numInArray += 1
+                turma_atual = Turma.objects.filter(id=turma.id).first()
+                # print(turma_atual)
+                turma_atualizada = { 'cod_turma' : novas_turmas[-1] }
+                serializer = TurmaSerializer(turma_atual, data=turma_atualizada)
+                serializer.is_valid(raise_exception=True)
+                # print(serializer)
+                # print(serializer.data)
+                serializer.save()
 
         turmas2 = Turma.objects.all()
         serializerTurma = ObservacaoSerializer(turmas2, many=True)
@@ -488,7 +500,7 @@ class Avancar_turmasAPIView(APIView):
 
 class Anteceder_turmasAPIView(APIView):
     def get(self, request):
-        turmas = Turma.objects.all()
+        turmas = Turma.objects.filter(status="1")
         turmas_list = []
         numInArray = 0
         novas_turmas = []
@@ -503,6 +515,8 @@ class Anteceder_turmasAPIView(APIView):
                 if carac.isdecimal():
                     caracter = carac
                     temp = int(caracter) - 1
+                    if temp <=0:
+                        temp = 1
                     temp_turma = str(turma)
                     tur = temp_turma.replace(temp_turma[numInArray], str(temp))
                     novas_turmas.append(tur)
