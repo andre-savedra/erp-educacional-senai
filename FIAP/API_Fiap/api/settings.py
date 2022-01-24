@@ -83,16 +83,28 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':'senai',
+        'NAME':'db_fiap',
         'HOST':'127.0.0.1',
-        'USER':'fms_root',
-        'PASSWORD':'fmsroot',
+        'USER':'root',
+        'PASSWORD':'',
         'PORT':'3306',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME':'senai',
+#         'HOST':'127.0.0.1',
+#         'USER':'fms_root',
+#         'PASSWORD':'fmsroot',
+#         'PORT':'3306',
+#     }
+# }
 
 
 # Password validation

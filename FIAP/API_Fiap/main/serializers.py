@@ -32,6 +32,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'identificador',
             'senha',
             'nivelAcesso',
+            'foto_avatar',
         ]
 
 class MateriaSerializer(serializers.ModelSerializer):
