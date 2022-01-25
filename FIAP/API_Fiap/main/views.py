@@ -1,5 +1,7 @@
 import math
 import datetime, pytz
+
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from .models import Aluno, Usuario, Turma, Fiap, Materia, Frequencia, Assinatura, Observacao, Ocorrencia, \
     Aprendizagem, Aproveitamento
@@ -8,10 +10,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
 
+from rest_framework.permissions import IsAuthenticated
+
 class TurmaAPIView(APIView):
     """
     API Turma
     """
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, pk=''):
         if pk == '':
@@ -92,7 +97,7 @@ class UsuarioAPIView(APIView):
             serializer = UsuarioSerializer(colab, many=True)
             return Response(serializer.data)
         else:
-            colab = Usuario.objects.get(identificador=pk) #changed
+            colab = Usuario.objects.get(id=pk) #changed
             serializer = UsuarioSerializer(colab)
             return Response(serializer.data)
 
@@ -534,3 +539,17 @@ class Anteceder_turmasAPIView(APIView):
         turmas2 = Turma.objects.all()
         serializerTurma = ObservacaoSerializer(turmas2, many=True)
         return Response("Atualizada com Sucesso!!!")
+
+class Buscar_aluno(APIView):
+    def get(self, request):
+        nome_aluno = request.GET['nome_do_input_text']
+        id_aluno = Aluno.objects.filter(nome=nome_aluno).first()
+
+        if nome_aluno is None or not nome_aluno:
+            return Response("teste nada digitado")
+        else:
+        dados = Fiap.objects.order_by('id').filter(
+            Q(aluno__icontains=id_aluno.id) | Q(descricao__icontains=nome_aluno)
+        )
+
+        return render(request, 'home/index.html', {'dados': dados})
