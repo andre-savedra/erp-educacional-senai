@@ -39,4 +39,6 @@ urlpatterns = [
     path('avancarTurma/', Avancar_turmasAPIView.as_view(), name='avancar_turma'),
 
     path('antecederTurma/', Anteceder_turmasAPIView.as_view(), name='avancar_turma'),
+
+    path('buscar/<str:pk>/', Buscar_aluno.as_view(), name='buscar'),
 ]

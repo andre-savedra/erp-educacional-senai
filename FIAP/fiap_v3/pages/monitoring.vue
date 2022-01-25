@@ -1,5 +1,9 @@
 <template>
   <div id="monitoring" :class="darkMode ? 'dark' : 'light'">
+    
+    <input type="text" v-model="searchName" name="buscar">
+    <button type="submit" @click="getSearch">SEARCH</button>
+    
     <div class="content-fiap">
       
       <div class="content" >
@@ -39,6 +43,7 @@
           nomeTurma: '1DES',
           nomeUsuario: 'André Savedra',
         },
+        searchName:'',
         fiaps: [],
         offset: 1,
         limit: 4,
@@ -58,6 +63,13 @@
           this.fiaps = data.data;
           this.total = data.total;
           this.last_page = data.last_page;
+        });
+      },
+      getSearch() {
+        const BASE_URL = 'http://127.0.0.1:8000';
+        const url = `${BASE_URL}/buscar/${this.searchName}`;
+        axios.get(url).then(({ data }) => {
+          console.log(data);
         });
       },
       changePage(value) {

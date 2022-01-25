@@ -48,6 +48,7 @@ class Materia(models.Model):
     def __str__(self):
         return self.nome
 
+
 class Fiap(models.Model):
     progresso = models.CharField(max_length=20, default='1',
                     choices=(('1','Iniciada'),

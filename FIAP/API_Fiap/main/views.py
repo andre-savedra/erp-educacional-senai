@@ -2,6 +2,7 @@ import math
 import datetime, pytz
 
 from django.db.models import Q
+from django.db.models.sql import OR
 from django.shortcuts import render, redirect
 from .models import Aluno, Usuario, Turma, Fiap, Materia, Frequencia, Assinatura, Observacao, Ocorrencia, \
     Aprendizagem, Aproveitamento
@@ -16,7 +17,7 @@ class TurmaAPIView(APIView):
     """
     API Turma
     """
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def get(self, request, pk=''):
         if pk == '':
@@ -86,6 +87,7 @@ class AlunoAPIView(APIView):
         aluno.delete()
         return Response('Aluno Apagado')
 
+
 class UsuarioAPIView(APIView):
     """
     API Colaborador
@@ -122,6 +124,7 @@ class UsuarioAPIView(APIView):
         colab.delete()
         return Response('Colaborador Apagado')
 
+
 class MateriaAPIView(APIView):
     """
     API Materia
@@ -157,6 +160,7 @@ class MateriaAPIView(APIView):
         materia = Materia.objects.get(id=pk)
         materia.delete()
         return Response('Materia Apagada')
+
 
 class AssinaturaAPIView(APIView):
     """
@@ -198,6 +202,7 @@ class AssinaturaAPIView(APIView):
         assinatura.delete()
         return Response('Assinatura Apagada')
 
+
 class FiapAPIView(APIView):
     """
     API Fiap
@@ -234,6 +239,7 @@ class FiapAPIView(APIView):
         fiap.delete()
         return Response('Fiap Apagada')
 
+
 class FiapBackendAPIView(APIView):
 
     def get(self, request):
@@ -263,7 +269,6 @@ class FiapBackendAPIView(APIView):
             'page': page,
             'last_page': math.ceil(total / per_page)
         })
-
 
 
 class FrequenciaAPIView(APIView):
@@ -304,6 +309,7 @@ class FrequenciaAPIView(APIView):
         frequencia.delete()
         return Response('Frequencia Apagada')
 
+
 class AproveitamentoAPIView(APIView):
     """
     API Aproveitamento
@@ -341,6 +347,7 @@ class AproveitamentoAPIView(APIView):
         aproveitamento = Aproveitamento.objects.get(id=pk)
         aproveitamento.delete()
         return Response('Aproveitamento Apagado')
+
 
 class AprendizagemAPIView(APIView):
     """
@@ -380,6 +387,7 @@ class AprendizagemAPIView(APIView):
         aprendi.delete()
         return Response('Aprendizagem Apagada')
 
+
 class OcorrenciaAPIView(APIView):
     """
     API Ocorrencia
@@ -418,6 +426,7 @@ class OcorrenciaAPIView(APIView):
         ocorrencia.delete()
         return Response('Ocorrencia Apagada')
 
+
 class ObservacaoAPIView(APIView):
     """
     API Observacao
@@ -455,6 +464,7 @@ class ObservacaoAPIView(APIView):
         observa = Observacao.objects.get(id=pk)
         observa.delete()
         return Response('Observacao Apagada')
+
 
 class Avancar_turmasAPIView(APIView):
     def get(self, request):
@@ -503,6 +513,7 @@ class Avancar_turmasAPIView(APIView):
         serializerTurma = ObservacaoSerializer(turmas2, many=True)
         return Response("Atualizada com Sucesso!!!")
 
+
 class Anteceder_turmasAPIView(APIView):
     def get(self, request):
         turmas = Turma.objects.filter(status="1")
@@ -540,16 +551,29 @@ class Anteceder_turmasAPIView(APIView):
         serializerTurma = ObservacaoSerializer(turmas2, many=True)
         return Response("Atualizada com Sucesso!!!")
 
-class Buscar_aluno(APIView):
-    def get(self, request):
-        nome_aluno = request.GET['nome_do_input_text']
-        id_aluno = Aluno.objects.filter(nome=nome_aluno).first()
 
-        if nome_aluno is None or not nome_aluno:
+class Buscar_aluno(APIView):
+
+    def get(self, request, pk=''):
+        # nome = request.GET['buscar']
+
+        id_aluno = Aluno.objects.filter(
+            Q(nome__icontains=pk)
+        ).values_list('id', flat=True)
+
+        id_prof = Usuario.objects.filter(
+            Q(nome__icontains=pk)
+        ).values_list('id', flat=True)
+
+        if pk is None or not pk:
             return Response("teste nada digitado")
         else:
-        dados = Fiap.objects.order_by('id').filter(
-            Q(aluno__icontains=id_aluno.id) | Q(descricao__icontains=nome_aluno)
-        )
+            dados = Fiap.objects.order_by('-dataInicio').filter(
+                Q(aluno__in=id_aluno) | Q(usuario__in=id_prof)
+            )
+        print(dados)
+        # | Q(usuario__icontains=int(id_prof['id']))
 
-        return render(request, 'home/index.html', {'dados': dados})
+        serializer = FiapSerializer(dados, many=True)
+        # serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
