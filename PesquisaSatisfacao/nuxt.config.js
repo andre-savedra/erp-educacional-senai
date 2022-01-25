@@ -38,7 +38,7 @@ export default {
         theme: 'saga-blue',
         ripple: true,
         components: [
-            'Button', 'Sidebar', 'Avatar', 'TieredMenu', 'Chart', 'Dropdown', 'Tooltip', 'Message', 'Accordion', 'AccordionTab', 'Password'
+            'Button', 'Sidebar', 'Avatar', 'TieredMenu', 'Chart', 'Dropdown', 'Tooltip', 'Message', 'Accordion', 'AccordionTab', 'Password', 'RadioButton'
         ]
     },
 

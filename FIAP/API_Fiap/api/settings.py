@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+from datetime import timedelta #jwt changed
 from pathlib import Path
 import os
 
@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "corsheaders",
     'rest_framework',
+    'rest_framework.authtoken', #djoser changed
     'rest_framework_simplejwt',
+    'djoser', #djoser changed
     'main',
 ]
 
@@ -145,13 +147,27 @@ MEDIA_URL = 'media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-#  'DEFAULT_PERMISSION_CLASSES': [
-#      'rest_framework.permissions.AllowAny',
-#      ]
-'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ], #changed
+ 'DEFAULT_PERMISSION_CLASSES': [
+     'rest_framework.permissions.AllowAny',
+     ]
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework.authentication.TokenAuthentication',
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',        
+    # ),#djoser changed jwt changed
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',        
+    # ), #djoser changed
+
+# 'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     ], # jwtchanged
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ("Bearer",),
+   'ACCESS_TOKEN_LIFETIME': timedelta(minutes=8),
+   'REFRESH_TOKEN_LIFETIME': timedelta(minutes=2),
+}
