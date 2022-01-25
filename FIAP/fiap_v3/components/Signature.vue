@@ -20,7 +20,7 @@
       readonly="readonly"
       type="text" 
       class="signature" 
-      @click="showModal=!showModal; signVal = Object.keys(innerRefs[0])[leftTitle.indexOf(title)]" 
+      @click="showModal2=!showModal2; signVal2 = Object.keys(innerRefs[0])[leftTitle.indexOf(title)]" 
       :id="Object.keys(innerRefs[0])[leftTitle.indexOf(title)]" 
       v-model="innerRefs[0][Object.keys(innerRefs[0])[leftTitle.indexOf(title)]].sign" 
      />
@@ -29,7 +29,7 @@
       
     </div>
 
-    <PopUp  :signValues='signVal' :type="'sign'" :show="showModal" v-if="showModal" />
+    <PopUp  :signValues='signVal2' :type="'sign'" :show="showModal2" v-if="showModal2" />
 
   </div>
 </template>
@@ -125,8 +125,8 @@
   export default {
     data: function() {
       return {
-        signVal: '',
-        showModal: false,
+        signVal2: '',
+        showModal2: false,
         ver: null,
       }
     },

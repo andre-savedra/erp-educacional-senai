@@ -2,7 +2,7 @@
   <div id="monitoring" :class="darkMode ? 'dark' : 'light'">
     
     <input type="text" v-model="searchName" name="buscar">
-    <button type="submit" @click="getSearch">SEARCH</button>
+    <button @click="getFiaps">SEARCH</button>
     
     <div class="content-fiap">
       
@@ -17,7 +17,7 @@
           :limit="limit"
           :last_page="last_page"
           @change-page="changePage"
-    />
+      />
     </div>
   </div>
 </template>
@@ -58,18 +58,11 @@
     methods: {
       getFiaps() {
         const BASE_URL = 'http://127.0.0.1:8000';
-        const url = `${BASE_URL}/fiaps?page=${this.offset}&size=${this.limit}`;
+        const url = `${BASE_URL}/fiaps?page=${this.offset}&size=${this.limit}&pk=${this.searchName}`;
         axios.get(url).then(({ data }) => {
           this.fiaps = data.data;
           this.total = data.total;
           this.last_page = data.last_page;
-        });
-      },
-      getSearch() {
-        const BASE_URL = 'http://127.0.0.1:8000';
-        const url = `${BASE_URL}/buscar/${this.searchName}`;
-        axios.get(url).then(({ data }) => {
-          console.log(data);
         });
       },
       changePage(value) {

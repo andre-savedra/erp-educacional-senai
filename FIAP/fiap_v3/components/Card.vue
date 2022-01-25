@@ -63,7 +63,9 @@
     methods: {
       fetchIdAluno: async function(){
         const alunoResponse = await axios.get(this.BASE_URL + "aluno/" + this.$props.data.aluno +"/")
+
         this.nomeAluno = alunoResponse.data.nome;
+    
       },
       fetchIdUsuario: async function(){
         const usuarioResponse = await axios.get(this.BASE_URL + "usuario/" + this.$props.data.usuario +"/")
@@ -81,11 +83,12 @@
         this.observacao = obsResponse.data.observacao;
       },
     },
-    mounted() {
-      this.fetchIdAluno(),
-      this.fetchIdUsuario(),
-      this.fetchIdTurma(),
-      this.fiapObs()
+    async mounted() {
+      console.log(this.$props.data)
+      await this.fetchIdAluno(),
+      await this.fetchIdUsuario(),
+      await this.fetchIdTurma(),
+      await this.fiapObs()
     }
   }
 </script>

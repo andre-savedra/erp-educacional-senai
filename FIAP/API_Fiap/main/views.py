@@ -243,12 +243,34 @@ class FiapAPIView(APIView):
 class FiapBackendAPIView(APIView):
 
     def get(self, request):
+        pk = request.GET.get('pk')
         s = request.GET.get('s')
         sort = request.GET.get('sort')
         page = int(request.GET.get('page', 1))
         per_page = int(request.GET.get('size', 1))
-        fiap = Fiap.objects.all()
 
+        if pk is None or not pk:
+            fiap = Fiap.objects.all()
+        else:
+            print(123)
+            print(pk)
+            id_aluno = Aluno.objects.filter(
+                Q(nome__icontains=pk)
+            ).values_list('id', flat=True)
+
+            id_prof = Usuario.objects.filter(
+                Q(nome__icontains=pk)
+            ).values_list('id', flat=True)
+
+            if pk is None or not pk:
+                return Response("teste nada digitado")
+            else:
+                dados = Fiap.objects.order_by('-dataInicio').filter(
+                    Q(aluno__in=id_aluno) | Q(usuario__in=id_prof)
+                )
+            fiap = dados
+
+        print(fiap)
         if s:
             fiap = fiap.filter(progresso__icontains=s)
 
