@@ -108,7 +108,7 @@ export default {
           showButton: true,
           adminButton: false,
           showSidebar: false,
-          hasSidebar: true,
+          hasSidebar: false,
           // sideButtons: [
           //   {
           //     textLabel: "Início",
@@ -161,16 +161,28 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch("user/getUser").then((response) => {
-      this.actualUser = response[0];
-      this.actual_admin = this.actualUser.admin;
-      this.$store.dispatch("user/setAdmin", this.actual_admin);
 
-      this.reloadButtons();
-      // console.log("vuex", this.$store.state.user.admin);
-      // console.log("actual_admin",this.actual_admin);
-      this.profileLoaded = true;
-    });
+    this.actualUser = {
+            "id": 1,
+            "name": "André Felipe Savedra Cruz",
+            "firstname": "André",
+            "img": "userimg-1.jpg",
+            "admin": true,
+            "level": 4
+        }
+
+    this.actual_admin = true;
+    this.profileLoaded = true;
+    // this.$store.dispatch("user/getUser").then((response) => {
+    //   this.actualUser = response[0];
+    //   this.actual_admin = this.actualUser.admin;
+    //   this.$store.dispatch("user/setAdmin", this.actual_admin);
+
+    //   this.reloadButtons();
+    //   // console.log("vuex", this.$store.state.user.admin);
+    //   // console.log("actual_admin",this.actual_admin);
+    //   this.profileLoaded = true;
+    // });
     this.$store.dispatch("user/getDjangoUser");
   },
   methods: {
@@ -220,17 +232,22 @@ export default {
         //button 1
         case 1:
           // alert("Home...");
-          this.$router.push("/");
+          this.$router.push("/pshome");
           this.checkSideBarVisibility();
-          break;
-
+          break;  
+        case 2:
+          // alert("Home...");
+          this.$router.push("/formulario");
+          this.checkSideBarVisibility();
+          break; 
         case 3:
-          this.$router.push("turmas");
+          this.$router.push("/dashboards");
           break;
 
         //button 4
         case 4:
-          alert("Logout...");
+          // alert("Logout...");
+          this.$router.push("/");
           this.resetSidebarMenu();
           break;
       }

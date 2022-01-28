@@ -497,7 +497,7 @@ export default {
       doc.print();
     },
     updateCharts: async function () {
-      console.log(this.selectedTurma)
+      console.log(this.selectedTurma);
       if (this.selectedTurma) {
         const newPieChart = {
           labels: ["Ótimo", "Bom", "Regular", "Ruim"],
@@ -515,9 +515,11 @@ export default {
           ],
         };
 
+        console.log("dnojfnodingoidgnoing");
+
         // this.stackedData.datasets[0].data = [];
         await this.$axios
-          .get("http://localhost:8001/api/v1/Forms/")
+          .get("http://localhost:8001/api/v1/Formulario/")
           .then((dados) => {
             this.formsTurma = 0;
             this.satsOtima = 0;
@@ -532,7 +534,7 @@ export default {
                 dataSet[i][j] = 0;
               }
             }
-
+            console.log(dados);
             // GET dos formulários preenchidos
             dados.data.forEach((form) => {
               if (form.id_turma == this.selectedTurma["id"]) {
@@ -553,7 +555,8 @@ export default {
                     break;
                 }
 
-                dataSet[form.id_importancia - 1][form.id_pergunta - 1] += 1;
+                // dataSet[form.id_importancia - 1][form.id_pergunta - 1] += 1;
+                // dataSet[form.id_importancia - 1][form.id_pergunta - 1] += 1;
               }
             });
 

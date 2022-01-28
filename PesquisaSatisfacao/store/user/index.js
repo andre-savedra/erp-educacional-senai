@@ -7,6 +7,6 @@ export const state = () => ({
         admin: false,
         level: 0
     },
-    admin: false,
+    admin: true,
     userApi: [],
 });

@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'rest_framework',
     'rest_framework.authtoken', #djoser changed
-    'rest_framework_simplejwt',
+    # 'rest_framework_simplejwt',
     'djoser', #djoser changed
     'main',
 ]
@@ -147,16 +147,16 @@ MEDIA_URL = 'media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
- 'DEFAULT_PERMISSION_CLASSES': [
-     'rest_framework.permissions.AllowAny',
-     ]
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #     'rest_framework.authentication.TokenAuthentication',
-    #     'rest_framework_simplejwt.authentication.JWTAuthentication',        
-    # ),#djoser changed jwt changed
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',        
-    # ), #djoser changed
+#  'DEFAULT_PERMISSION_CLASSES': [
+#      'rest_framework.permissions.AllowAny',
+#      ]
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',        
+    ),#djoser changed jwt changed
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',        
+    ), #djoser changed
 
 # 'DEFAULT_AUTHENTICATION_CLASSES': [
 #         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -166,8 +166,8 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
-SIMPLE_JWT = {
-   'AUTH_HEADER_TYPES': ("Bearer",),
-   'ACCESS_TOKEN_LIFETIME': timedelta(minutes=8),
-   'REFRESH_TOKEN_LIFETIME': timedelta(minutes=2),
-}
+# SIMPLE_JWT = {
+#    'AUTH_HEADER_TYPES': ("Bearer",),
+#    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=8),
+#    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=2),
+# }

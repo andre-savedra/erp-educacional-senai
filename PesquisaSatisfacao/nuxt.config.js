@@ -53,6 +53,7 @@ export default {
     modules: [
         // https://go.nuxtjs.dev/axios
         '@nuxtjs/axios',
+        '@nuxtjs/auth',
         '@nuxtjs/google-fonts',
         'primevue/nuxt',
     ],
@@ -60,6 +61,24 @@ export default {
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
 
+    },
+
+    auth: {
+        strategies: {
+            local: {
+                endpoints: {
+                    login: { url: 'http://localhost:8000/api/v1/auth/token/login/', method: 'post', propertyName: 'auth_token' },
+                    logout: { url: 'http://localhost:8000/api/v1/auth/token/logout/', method: 'post', propertyName: 'auth_token' },
+                    user: { url: 'http://localhost:8000/turma/', method: 'get', propertyName: false }
+                },
+                tokenType: 'Token',
+                tokenName: 'Authorization'
+            }
+        },
+        redirect: {
+            login: '/',
+            home: '/pshome'
+        }
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
