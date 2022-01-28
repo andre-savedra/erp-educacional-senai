@@ -9,7 +9,9 @@ class TurmaSerializer(serializers.ModelSerializer):
             'cod_turma',
             'nome',
             'periodo',
+            'status',
             'dataInicio',
+            'dataFinal',
         ]
 
 class AlunoSerializer(serializers.ModelSerializer):

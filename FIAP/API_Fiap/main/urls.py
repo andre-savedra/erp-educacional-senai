@@ -40,7 +40,5 @@ urlpatterns = [
 
     path('antecederTurma/', Anteceder_turmasAPIView.as_view(), name='avancar_turma'),
 
-    #jwt changed    
-    path("hello/", HelloView.as_view(), name='hello'),
-
+    path('buscar/<str:pk>/', Buscar_aluno.as_view(), name='buscar'),
 ]

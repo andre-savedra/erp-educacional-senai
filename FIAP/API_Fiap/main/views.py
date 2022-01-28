@@ -1,5 +1,8 @@
 import math
+import datetime, pytz
 
+from django.db.models import Q
+from django.db.models.sql import OR
 from django.shortcuts import render, redirect
 from .models import Aluno, Usuario, Turma, Fiap, Materia, Frequencia, Assinatura, Observacao, Ocorrencia, \
     Aprendizagem, Aproveitamento
@@ -8,20 +11,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
 
-#jwt changed
 from rest_framework.permissions import IsAuthenticated
-class HelloView(APIView):
-    # permission_classes = (IsAuthenticated,)
-
-    def get(self, request):
-        content = {'message': 'Hello, World!'}
-        return Response(content)
-
 
 class TurmaAPIView(APIView):
     """
     API Turma
     """
+    # permission_classes = (IsAuthenticated,)
 
     def get(self, request, pk=''):
         if pk == '':
@@ -91,6 +87,7 @@ class AlunoAPIView(APIView):
         aluno.delete()
         return Response('Aluno Apagado')
 
+
 class UsuarioAPIView(APIView):
     """
     API Colaborador
@@ -99,10 +96,9 @@ class UsuarioAPIView(APIView):
     def get(self, request, pk=''):
         if pk == '':
             colab = Usuario.objects.all()
-            serializer = UsuarioSerializer(colab, many=True)            
+            serializer = UsuarioSerializer(colab, many=True)
             return Response(serializer.data)
         else:
-            # colab = Usuario.objects.get(identificador=pk) #changed
             colab = Usuario.objects.get(id=pk) #changed
             serializer = UsuarioSerializer(colab)
             return Response(serializer.data)
@@ -127,6 +123,7 @@ class UsuarioAPIView(APIView):
         colab = Usuario.objects.get(id=pk)
         colab.delete()
         return Response('Colaborador Apagado')
+
 
 class MateriaAPIView(APIView):
     """
@@ -163,6 +160,7 @@ class MateriaAPIView(APIView):
         materia = Materia.objects.get(id=pk)
         materia.delete()
         return Response('Materia Apagada')
+
 
 class AssinaturaAPIView(APIView):
     """
@@ -204,6 +202,7 @@ class AssinaturaAPIView(APIView):
         assinatura.delete()
         return Response('Assinatura Apagada')
 
+
 class FiapAPIView(APIView):
     """
     API Fiap
@@ -240,15 +239,48 @@ class FiapAPIView(APIView):
         fiap.delete()
         return Response('Fiap Apagada')
 
+
 class FiapBackendAPIView(APIView):
 
     def get(self, request):
+        pk = request.GET.get('pk')
+        turma = request.GET.get('turma')
         s = request.GET.get('s')
         sort = request.GET.get('sort')
         page = int(request.GET.get('page', 1))
         per_page = int(request.GET.get('size', 1))
-        fiap = Fiap.objects.all()
 
+        if turma is None and pk is None or not turma and not pk:
+            fiap = Fiap.objects.all()
+        else:
+            if pk is None or not pk:
+                if turma is None or not turma:
+                    fiap = Fiap.objects.all()
+                else:
+                    dados = Fiap.objects.order_by('-dataInicio').filter(
+                        Q(turma__in=turma)
+                    )
+                    fiap = dados
+
+            else:
+                print(123)
+                print(pk)
+                id_aluno = Aluno.objects.filter(
+                    Q(nome__icontains=pk)
+                ).values_list('id', flat=True)
+
+                id_prof = Usuario.objects.filter(
+                    Q(nome__icontains=pk)
+                ).values_list('id', flat=True)
+
+                if pk is None or not pk:
+                    return Response("teste nada digitado")
+                else:
+                    dados = Fiap.objects.order_by('-dataInicio').filter(
+                        Q(aluno__in=id_aluno) | Q(usuario__in=id_prof)
+                    )
+                fiap = dados
+                print(fiap)
         if s:
             fiap = fiap.filter(progresso__icontains=s)
 
@@ -269,7 +301,6 @@ class FiapBackendAPIView(APIView):
             'page': page,
             'last_page': math.ceil(total / per_page)
         })
-
 
 
 class FrequenciaAPIView(APIView):
@@ -310,6 +341,7 @@ class FrequenciaAPIView(APIView):
         frequencia.delete()
         return Response('Frequencia Apagada')
 
+
 class AproveitamentoAPIView(APIView):
     """
     API Aproveitamento
@@ -347,6 +379,7 @@ class AproveitamentoAPIView(APIView):
         aproveitamento = Aproveitamento.objects.get(id=pk)
         aproveitamento.delete()
         return Response('Aproveitamento Apagado')
+
 
 class AprendizagemAPIView(APIView):
     """
@@ -386,6 +419,7 @@ class AprendizagemAPIView(APIView):
         aprendi.delete()
         return Response('Aprendizagem Apagada')
 
+
 class OcorrenciaAPIView(APIView):
     """
     API Ocorrencia
@@ -423,6 +457,7 @@ class OcorrenciaAPIView(APIView):
         ocorrencia = Ocorrencia.objects.get(id=pk)
         ocorrencia.delete()
         return Response('Ocorrencia Apagada')
+
 
 class ObservacaoAPIView(APIView):
     """
@@ -462,9 +497,10 @@ class ObservacaoAPIView(APIView):
         observa.delete()
         return Response('Observacao Apagada')
 
+
 class Avancar_turmasAPIView(APIView):
     def get(self, request):
-        turmas = Turma.objects.all()
+        turmas = Turma.objects.filter(status="1")
         turmas_list = []
         numInArray = 0
         novas_turmas = []
@@ -475,31 +511,44 @@ class Avancar_turmasAPIView(APIView):
 
         for turma in turmas:
             numInArray = 0
-            for carac in str(turma):
-                if carac.isdecimal():
-                    caracter = carac
-                    temp = int(carac) + 1
-                    temp_turma = str(turma)
-                    tur = temp_turma.replace(temp_turma[numInArray], str(temp))
-                    novas_turmas.append(tur)
-                    break
-                numInArray += 1
-            turma_atual = Turma.objects.filter(id=turma.id).first()
-            # print(turma_atual)
-            turma_atualizada = { 'cod_turma' : novas_turmas[-1] }
-            serializer = TurmaSerializer(turma_atual, data=turma_atualizada)
-            serializer.is_valid(raise_exception=True)
-            # print(serializer)
-            # print(serializer.data)
-            serializer.save()
+            # now = pytz.utc.localize(datetime.datetime.now())
+            now = datetime.date.today().strftime('%y-%m-%d')
+            print(turma.dataFinal.strftime('%y-%m-%d'))
+            print(now)
+            # print(turma[0])
+            if now >= turma.dataFinal.strftime('%y-%m-%d') :
+                turma_atual = Turma.objects.filter(id=turma.id).first()
+                turma_atualizada = {'status': "2"}
+                serializer = TurmaSerializer(turma_atual, data=turma_atualizada)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+            else:
+                for carac in str(turma):
+                    if carac.isdecimal():
+                        caracter = carac
+                        temp = int(carac) + 1
+                        temp_turma = str(turma)
+                        tur = temp_turma.replace(temp_turma[numInArray], str(temp))
+                        novas_turmas.append(tur)
+                        break
+                    numInArray += 1
+                turma_atual = Turma.objects.filter(id=turma.id).first()
+                # print(turma_atual)
+                turma_atualizada = { 'cod_turma' : novas_turmas[-1] }
+                serializer = TurmaSerializer(turma_atual, data=turma_atualizada)
+                serializer.is_valid(raise_exception=True)
+                # print(serializer)
+                # print(serializer.data)
+                serializer.save()
 
         turmas2 = Turma.objects.all()
         serializerTurma = ObservacaoSerializer(turmas2, many=True)
         return Response("Atualizada com Sucesso!!!")
 
+
 class Anteceder_turmasAPIView(APIView):
     def get(self, request):
-        turmas = Turma.objects.all()
+        turmas = Turma.objects.filter(status="1")
         turmas_list = []
         numInArray = 0
         novas_turmas = []
@@ -514,6 +563,8 @@ class Anteceder_turmasAPIView(APIView):
                 if carac.isdecimal():
                     caracter = carac
                     temp = int(caracter) - 1
+                    if temp <=0:
+                        temp = 1
                     temp_turma = str(turma)
                     tur = temp_turma.replace(temp_turma[numInArray], str(temp))
                     novas_turmas.append(tur)
@@ -531,3 +582,30 @@ class Anteceder_turmasAPIView(APIView):
         turmas2 = Turma.objects.all()
         serializerTurma = ObservacaoSerializer(turmas2, many=True)
         return Response("Atualizada com Sucesso!!!")
+
+
+class Buscar_aluno(APIView):
+
+    def get(self, request, pk=''):
+        # nome = request.GET['buscar']
+
+        id_aluno = Aluno.objects.filter(
+            Q(nome__icontains=pk)
+        ).values_list('id', flat=True)
+
+        id_prof = Usuario.objects.filter(
+            Q(nome__icontains=pk)
+        ).values_list('id', flat=True)
+
+        if pk is None or not pk:
+            return Response("teste nada digitado")
+        else:
+            dados = Fiap.objects.order_by('-dataInicio').filter(
+                Q(aluno__in=id_aluno) | Q(usuario__in=id_prof)
+            )
+        print(dados)
+        # | Q(usuario__icontains=int(id_prof['id']))
+
+        serializer = FiapSerializer(dados, many=True)
+        # serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)

@@ -1,3 +1,5 @@
+import os
+
 import django
 from django.db import models
 import datetime
@@ -11,7 +13,11 @@ class Turma(models.Model):
                     choices=(('1','Manhã'),
                              ('2','Tarde'),
                              ('3','Noite')))
+    status = models.CharField(null=True, blank=True, max_length=15, default='1',
+                    choices=(('1','Em andamento'),
+                             ('2','Finalizado')))
     dataInicio = models.DateTimeField(default=datetime.datetime.now(),null=True, blank=True)
+    dataFinal = models.DateTimeField(default=datetime.datetime.now(),null=True, blank=True)
 
     def __str__(self):
         return self.cod_turma
@@ -43,6 +49,7 @@ class Materia(models.Model):
 
     def __str__(self):
         return self.nome
+
 
 class Fiap(models.Model):
     progresso = models.CharField(max_length=20, default='1',
@@ -174,11 +181,23 @@ class uploadCsv(models.Model):
 
         for row in range(data.shape[0]):
             aluno = Aluno()
+            try:
+                aluno.turma = Turma.objects.get(cod_turma=data.iat[row, 3])
+            except:
+                turma = Turma()
+                turma.cod_turma = data.iat[row, 3]
+                turma.nome = data.iat[row, 4]
+                turma.periodo = data.iat[row, 5]
+                turma.save()
+                aluno.turma = Turma.objects.get(cod_turma=data.iat[row, 3])
+
             aluno.nome = data.iat[row, 0]
             aluno.ra = data.iat[row, 1]
             aluno.cpf = data.iat[row, 2]
-            aluno.turma = Turma.objects.get(cod_turma=data.iat[row, 3])
+
             aluno.save()
+
+        os.remove(self.File.path)
 
     def __str__(self):
         return str(self.File)
