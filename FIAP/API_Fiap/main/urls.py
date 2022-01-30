@@ -2,7 +2,7 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path("turma/", TurmaAPIView.as_view(), name='turma'),
+    path('turma/', TurmaAPIView.as_view(), name='turma'),
     path('turma/<int:pk>/', TurmaAPIView.as_view(), name='turmaParameters'),
 
     path('aluno/', AlunoAPIView.as_view(), name='aluno'),

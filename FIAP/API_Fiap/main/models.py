@@ -156,7 +156,6 @@ class Formulario(models.Model):
     def __str__(self):
         return str(self.id)
 
-
 class uploadCsv(models.Model):
     File = models.FileField(null=True, upload_to='imports/%y/%m/%d/')
 

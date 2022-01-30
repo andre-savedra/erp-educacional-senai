@@ -96,7 +96,6 @@ class UsuarioAPIView(APIView):
             serializer = UsuarioSerializer(colab)
             return Response(serializer.data)
 
-
     def post(self, request):
         serializer = UsuarioSerializer(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
@@ -168,7 +167,6 @@ class AssinaturaAPIView(APIView):
             serializer = AssinaturaSerializer(assinatura)
             return Response(serializer.data)
 
-
     def post(self, request):
         # print(request.data[0]['fiap'])
         serializer = AssinaturaSerializer(data=request.data, many=True)
@@ -207,7 +205,6 @@ class FiapAPIView(APIView):
             fiap = Fiap.objects.get(id=pk)
             serializer = FiapSerializer(fiap)
             return Response(serializer.data)
-
 
     def post(self, request):
         serializer = FiapSerializer(data=request.data, many=True)
@@ -275,7 +272,6 @@ class FrequenciaAPIView(APIView):
             frequencia = Frequencia.objects.get(fiap=pk)
             serializer = FrequenciaSerializer(frequencia)
             return Response(serializer.data)
-
 
     def post(self, request):
         fiap = Fiap.objects.latest('id')

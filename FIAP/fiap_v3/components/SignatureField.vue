@@ -129,7 +129,6 @@
         var image = canvas.toDataURL();
         const link = document.createElement("a");
     
-    
         let el = document.getElementById(this.$props.signValues);
         el.value = image;
         el.dispatchEvent(new Event('input'));

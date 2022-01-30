@@ -92,7 +92,6 @@ class detFormulario(admin.ModelAdmin):
     list_display_links = ('id',)
     list_per_page = 10
 
-
 admin.site.register(Turma, detTurma)
 admin.site.register(Aluno,detAluno)
 admin.site.register(Usuario,detUsuario)
