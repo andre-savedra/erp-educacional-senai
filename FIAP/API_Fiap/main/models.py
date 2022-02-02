@@ -3,21 +3,24 @@ import os
 import django
 from django.db import models
 import datetime
+from django.utils import timezone
 import pandas as pd
 
 
 class Turma(models.Model):
     cod_turma = models.CharField(max_length=50, default='')
     nome = models.CharField(max_length=50, null=True, blank=True)
-    periodo = models.CharField(null=True, blank=True, max_length=15, default='1',
+    periodo = models.CharField(null=False, blank=False, max_length=15, default='1',
                     choices=(('1','Manhã'),
                              ('2','Tarde'),
                              ('3','Noite')))
-    status = models.CharField(null=True, blank=True, max_length=15, default='1',
+    status = models.CharField(null=False, blank=False, max_length=15, default='1',
                     choices=(('1','Em andamento'),
                              ('2','Finalizado')))
-    dataInicio = models.DateTimeField(default=datetime.datetime.now(),null=True, blank=True)
-    dataFinal = models.DateTimeField(default=datetime.datetime.now(),null=True, blank=True)
+    dataInicio = models.DateTimeField(default=timezone.now(),null=True, blank=True)
+    # dataInicio = models.DateTimeField(default=datetime.datetime.now(),null=True, blank=True)
+    dataFinal = models.DateTimeField(default=timezone.now(),null=True, blank=True)
+    # dataFinal = models.DateTimeField(default=datetime.datetime.now(),null=True, blank=True)
 
     def __str__(self):
         return self.cod_turma
@@ -60,8 +63,8 @@ class Fiap(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE,null=True, blank=True)
     turma = models.ForeignKey(Turma, on_delete=models.CASCADE, null=True, blank=True)
     materia = models.ForeignKey(Materia, on_delete=models.CASCADE, null=True)
-    dataInicio = models.DateTimeField(default=datetime.datetime.now())
-    dataFinal = models.DateTimeField(null=True, default=datetime.datetime.now())
+    dataInicio = models.DateTimeField(default=timezone.now())
+    dataFinal = models.DateTimeField(null=True, default=timezone.now())
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
@@ -122,7 +125,7 @@ class Ocorrencia(models.Model):
 class Observacao(models.Model):
     observacao = models.CharField(max_length=500, null=True, blank=True)
     fiap = models.ForeignKey(Fiap, on_delete=models.CASCADE, null=True, blank=True)
-    data = models.DateTimeField(default=datetime.datetime.now())
+    data = models.DateTimeField(default=timezone.now())
 
     def __str__(self):
         return str(self.id)
@@ -187,10 +190,18 @@ class uploadCsv(models.Model):
                 turma = Turma()
                 turma.cod_turma = data.iat[row, 3]
                 turma.nome = data.iat[row, 4]
-                turma.periodo = data.iat[row, 5]
+                
+                periodo = data.iat[row, 5].lower()
+                if periodo == 'manhã':
+                    turma.periodo = 1
+                elif periodo == 'tarde':
+                    turma.periodo = 2
+                elif periodo == 'noite':
+                    turma.periodo = 3
+                
                 turma.save()
                 aluno.turma = Turma.objects.get(cod_turma=data.iat[row, 3])
-
+    
             aluno.nome = data.iat[row, 0]
             aluno.ra = data.iat[row, 1]
             aluno.cpf = data.iat[row, 2]

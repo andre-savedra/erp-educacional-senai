@@ -67,7 +67,7 @@ export default {
       })
 
     
-    if(this.$props.idUser !== undefined){
+    if(this.$props.idUser !== undefined && this.$props.idUser !== null){
      
       fetch("http://localhost:8000/aluno/"+ this.$props.idUser + "/")
       .then( res => res.json() )

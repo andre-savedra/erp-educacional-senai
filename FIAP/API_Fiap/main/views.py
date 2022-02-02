@@ -1,5 +1,6 @@
 import math
 import datetime, pytz
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from django.db.models import Q
 from django.db.models.sql import OR
@@ -10,6 +11,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
+
+
 
 from rest_framework.permissions import IsAuthenticated
 
@@ -142,10 +145,22 @@ class MateriaAPIView(APIView):
 
 
     def post(self, request):
-        serializer = MateriaSerializer(data=request.data, many=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({"msg": "Inserido com sucesso"})
+        try:
+            materia = Materia.objects.get(nome=request.data[0]['nome']) 
+            materia = Materia.objects.filter(nome=request.data[0]['nome']) 
+            serializer = MateriaSerializer(materia, many=True)            
+            return Response({"msg": "Existente", "materia": serializer.data})
+        except ObjectDoesNotExist:
+            serializer = MateriaSerializer(data=request.data, many=True)
+            serializer.is_valid(raise_exception=True)                      
+            print("adicionando materia nova....")
+            serializer.save()
+            return Response({"msg": "Inserido com sucesso", "materia": serializer.data})
+        except MultipleObjectsReturned:
+            materia = Materia.objects.filter(nome=request.data[0]['nome'])
+            serializer = MateriaSerializer(materia, many=True)
+            return Response({"msg": "Existente", "materia": serializer.data})
+
         #return Response({"id": serializer.data['id']})
         # return Response(serializer.data, status=status.HTTP_201_
 
