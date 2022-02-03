@@ -536,8 +536,8 @@ export default {
       this.saveFrequency();
       this.saveSchoolarEnjoyment();
       this.saveApprenticeship();
-      this.saveOccurrence();
       this.saveSign();
+      this.saveOccurrence();
       this.saveObservation();
 
       setTimeout(() => {
@@ -810,15 +810,15 @@ export default {
     saveSign: async function () {
       (this.mainData = {
         docente: this.fiap_data_att.managerKnowledgement[0].professor.sign,
-        docenteData: this.fiap_data_att.managerKnowledgement[0].professor.date,
+        docenteData: this.formatDate(this.fiap_data_att.managerKnowledgement[0].professor.date),
         coordenador: this.fiap_data_att.managerKnowledgement[0].coordenador.sign,
-        coordenadorData: this.fiap_data_att.managerKnowledgement[0].coordenador.date,
+        coordenadorData: this.formatDate(this.fiap_data_att.managerKnowledgement[0].coordenador.date),
         social: this.fiap_data_att.managerKnowledgement[0].QLA.sign,
-        socialData: this.fiap_data_att.managerKnowledgement[0].QLA.date,
+        socialData: this.formatDate(this.fiap_data_att.managerKnowledgement[0].QLA.date),
         aluno: this.fiap_data_att.agentKnowledgement[0].aluno.sign,
-        alunoData: this.fiap_data_att.agentKnowledgement[0].aluno.date,
+        alunoData: this.formatDate(this.fiap_data_att.agentKnowledgement[0].aluno.date),
         responsavel: this.fiap_data_att.agentKnowledgement[0].responsavel.sign,
-        responsavelData: this.fiap_data_att.agentKnowledgement[0].responsavel.date,
+        responsavelData: this.formatDate(this.fiap_data_att.agentKnowledgement[0].responsavel.date),
       }),
         await axios({
           method: this.commitMethod,

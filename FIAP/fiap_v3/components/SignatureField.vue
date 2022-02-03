@@ -17,7 +17,7 @@
 <script>
 export default {
   name: "Signature",
-  props: ["myback", "myBtnColor", "signValues"],
+  props: ["myback", "myBtnColor", "signValues", "signDate"],
   computed: {
     cssCustom() {
       return {
@@ -139,7 +139,12 @@ export default {
       var canvas = document.getElementById("quadro");
       let item = document.getElementById("campo-canvas");
       var ctx = canvas.getContext("2d");
-      let date = this.formatDate("frontend");
+      
+      let date = this.formatDate("frontend");      
+      let element = document.getElementById(this.$props.signValues+"Date");
+      element.value = date;
+      element.dispatchEvent(new Event("input"));
+      
       let CutDate = date.toString().substr(0, 25);
       ctx.fillText(CutDate, width / 2 - 30, height / 2 + 20);
       //canvas.setAttribute("download", "ass.png");

@@ -14,18 +14,16 @@
       :key="title"
     >
       <label>{{ title }}:</label>
-      <input  type="text" :id="Object.keys(innerRefs[0])[leftTitle.indexOf(title)]+'Date'" v-model="innerRefs[0][Object.keys(innerRefs[0])[leftTitle.indexOf(title)]].date" disabled />
+      <input  type="text" :id="Object.keys(innerRefs[0])[leftTitle.indexOf(title)]+'Date'" v-model="innerRefs[0][Object.keys(innerRefs[0])[leftTitle.indexOf(title)]].date"  />
       <input
       
       readonly="readonly"
       type="text" 
       class="signature" 
-      @click="showModal=!showModal; signVal = Object.keys(innerRefs[0])[leftTitle.indexOf(title)]" 
+      @click="showModal=!showModal; signVal = Object.keys(innerRefs[0])[leftTitle.indexOf(title)]; teste()" 
       :id="Object.keys(innerRefs[0])[leftTitle.indexOf(title)]" 
-      v-model="innerRefs[0][Object.keys(innerRefs[0])[leftTitle.indexOf(title)]].sign" 
+      v-model="innerRefs[0][Object.keys(innerRefs[0])[leftTitle.indexOf(title)]].sign"
      />
-
-     
       
     </div>
 
@@ -125,7 +123,7 @@
   export default {
     data: function() {
       return {
-        signVal: '',
+        signVal: '',        
         showModal: false,
         ver: null,
       }
@@ -140,6 +138,11 @@
       },
     },
     methods:{
+
+      teste: function(){
+        console.log("OLA TESTE");
+        console.log(this.signVal);
+      },
       maskData: function(){
         
         this.$props.innerRefs.forEach((line) =>{
