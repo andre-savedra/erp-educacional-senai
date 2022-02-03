@@ -16,7 +16,6 @@
             ['Turma:', 'Nº:', 'Data:'], //line 2
             ['Docente:', 'Disciplina:'], //line 3
           ]"
-          :vReff="occ"
           :idUser="idStudentSearch"
           @update="fiap_data_att.identification = $event"
           :innerRefs="fiap_data_att.identification"
@@ -29,7 +28,6 @@
           :items="[
             ['Aulas previstas:', 'Ausências:'], //line 1
           ]"
-          :vReff="occ"
           @update="fiap_data_att.frequency = $event"
           :innerRefs="fiap_data_att.frequency"
         />
@@ -42,7 +40,6 @@
             ['Unidade avaliada:'], //line 1
             ['Nota média da turma:', 'Nota do aluno:', 'Nota de recuperação:'], //line 2
           ]"
-          :vReff="occ"
           @update="fiap_data_att.schoolarEnjoyment = $event"
           :innerRefs="fiap_data_att.schoolarEnjoyment"
         />
@@ -58,7 +55,6 @@
             'Relacionamento interpessoal',
             'Outras situações pertinentes ao processo de aprendizagem',
           ]"
-          :vReff="occ"
           @update="fiap_data_att.apprenticeship = $event"
           :innerRefs="fiap_data_att.apprenticeship"
         />
@@ -73,7 +69,6 @@
             'Afastamento temporário',
             'Cancelamento de matrícula',
           ]"
-          :vReff="occ"
           @update="fiap_data_att.occurrence = $event"
           :innerRefs="fiap_data_att.occurrence"
         />
@@ -100,7 +95,6 @@
           type="largerow"
           :hiddenContent="true"
           :items="[['Descrição']]"
-          :vReff="occ"
           @update="fiap_data_att.desc = $event"
           :innerRefs="fiap_data_att.desc"
         />
@@ -318,9 +312,10 @@ export default {
       if (input >= 0 && input < 9) return "0" + input.toString();
       else return input.toString();
     },
-    formatDate: function (input) {
-      console.log("AQUI");
+    formatDate: function (input) {      
       let dt = new Date();
+
+      if (input === null) return input;
 
       if (input === "frontend")
         return (
@@ -356,20 +351,20 @@ export default {
           val[1] = separator2[0] + ":" + separator2[1];
 
         return val[0] + " - " + val[1];
-      }
+      } else return input;
     },
 
     temporizer: function (initiate) {
-      if (
-        this.fiap_data_att.NON_CHANGEBLE_DATA.aluno.id !==
-        document.getElementById("alunoIDver").value
-      ) {
+      const alunoIDver = document.getElementById("alunoIDver");      
+      
+      if (alunoIDver !== null && this.fiap_data_att.NON_CHANGEBLE_DATA.aluno.id !== alunoIDver.value) 
+      {
         if (initiate !== true) {
-          this.fiap_data_att.NON_CHANGEBLE_DATA.aluno.id =
-            document.getElementById("alunoIDver").value;
+          this.fiap_data_att.NON_CHANGEBLE_DATA.aluno.id = alunoIDver.value;
           this.getStudent(this.fiap_data_att.NON_CHANGEBLE_DATA.aluno.id);
         }
       }
+
       setTimeout(this.temporizer, 1000);
     },
     getFiap: async function (fiapID) {
@@ -512,6 +507,17 @@ export default {
         signsResponse.data.aluno;
       this.fiap_data_att.agentKnowledgement[0].responsavel.sign =
         signsResponse.data.responsavel;
+
+      this.fiap_data_att.managerKnowledgement[0].professor.date =
+        this.formatDate(signsResponse.data.docenteData);
+      this.fiap_data_att.managerKnowledgement[0].coordenador.date =
+        this.formatDate(signsResponse.data.coordenadorData);
+      this.fiap_data_att.managerKnowledgement[0].QLA.date = 
+        this.formatDate(signsResponse.data.socialData);
+      this.fiap_data_att.agentKnowledgement[0].aluno.date = 
+        this.formatDate(signsResponse.data.alunoData);
+      this.fiap_data_att.agentKnowledgement[0].responsavel.date =
+        this.formatDate(signsResponse.data.responsavelData);
     },
     getObservations: async function (fiapID) {
       const obsResponse = await axios.get(
@@ -548,7 +554,7 @@ export default {
     // Saving Functions
 
     saveMateria: async function () {
-      console.log("Salvando matéria....")
+      console.log("Salvando matéria....");
       if (
         this.fiap_data_att.identification[2].disciplina !== null &&
         this.fiap_data_att.identification[2].disciplina !== undefined
@@ -570,15 +576,13 @@ export default {
               ? (this.sendVerify = 1)
               : (this.sendVerify = 0);
 
-              console.log("RESPOSTA", response);              
-              const materiaId = response.data.materia[0].id;
-              if(materiaId !== undefined && materiaId !== null ) {
-                this.fiap_data_att.NON_CHANGEBLE_DATA.materia.id = materiaId;
-              }
-              else
-              {
-                this.fiap_data_att.NON_CHANGEBLE_DATA.materia.id = "error";
-              }
+            console.log("RESPOSTA", response);
+            const materiaId = response.data.materia[0].id;
+            if (materiaId !== undefined && materiaId !== null) {
+              this.fiap_data_att.NON_CHANGEBLE_DATA.materia.id = materiaId;
+            } else {
+              this.fiap_data_att.NON_CHANGEBLE_DATA.materia.id = "error";
+            }
             //console.log('token', response);
             console.log("Materia salva");
           })
@@ -806,11 +810,15 @@ export default {
     saveSign: async function () {
       (this.mainData = {
         docente: this.fiap_data_att.managerKnowledgement[0].professor.sign,
-        coordenador:
-          this.fiap_data_att.managerKnowledgement[0].coordenador.sign,
+        docenteData: this.fiap_data_att.managerKnowledgement[0].professor.date,
+        coordenador: this.fiap_data_att.managerKnowledgement[0].coordenador.sign,
+        coordenadorData: this.fiap_data_att.managerKnowledgement[0].coordenador.date,
         social: this.fiap_data_att.managerKnowledgement[0].QLA.sign,
+        socialData: this.fiap_data_att.managerKnowledgement[0].QLA.date,
         aluno: this.fiap_data_att.agentKnowledgement[0].aluno.sign,
+        alunoData: this.fiap_data_att.agentKnowledgement[0].aluno.date,
         responsavel: this.fiap_data_att.agentKnowledgement[0].responsavel.sign,
+        responsavelData: this.fiap_data_att.agentKnowledgement[0].responsavel.date,
       }),
         await axios({
           method: this.commitMethod,
@@ -894,6 +902,8 @@ export default {
     },
   },
   created() {
+    // console.log("this.$route.params");
+    // console.log(this.$route.params);
     if (this.$route.params.token != undefined) {
       this.idStudentSearch = this.$route.params.idAluno;
       this.commitMethod = this.$route.params.mthd;
@@ -923,7 +933,7 @@ export default {
     // }else{
 
     // }
-    1;
+    
   },
   mounted() {
     this.temporizer(true);

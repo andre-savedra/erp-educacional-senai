@@ -166,11 +166,11 @@
 // import { mapMutations } from "vuex";
 
 export default {
-  props: ["title", "items", "type", "hiddenContent", "vReff", "innerRefs","idUser"],
+  props: ["title", "items", "type", "hiddenContent", "innerRefs","idUser"],
   data: function () {
 
     return {
-
+      vReff: false,
 
     };
   },
@@ -183,8 +183,17 @@ export default {
   computed: {
 
   },
+  watch: {
+    // vReff: function(){
+    //     if(this.vReff === false)
+    //     {
+    //       //clean all fields
+    //       // this.innerRefs = this.innerRefOriginal;
+         
+    //     }
+    // }
+  },
   created(){
-    
     // v-model for select -> innerRefs[0][Object.keys(innerRefs[0])[items.indexOf(item)]]
     //this.$props.innerRefs[this.$props.items.indexOf(item)][Object.keys(innerRefs[item.indexOf(i)])]
     // v-model for input -> innerRefs[items.indexOf(item)][Object.keys(innerRefs[items.indexOf(item)])[[item.indexOf(i)]]]

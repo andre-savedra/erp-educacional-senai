@@ -50,10 +50,15 @@ class AssinaturaSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'docente',
+            'docenteData',
             'coordenador',
+            'coordenadorData',
             'social',
+            'socialData',
             'aluno',
+            'alunoData',
             'responsavel',
+            'responsavelData',
             'fiap',
         ]
 

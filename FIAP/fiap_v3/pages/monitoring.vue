@@ -74,7 +74,7 @@
       },
     },
     created(){
-      this.getFiap(1);
+      // this.getFiap(1);
     },
   };
 </script>
