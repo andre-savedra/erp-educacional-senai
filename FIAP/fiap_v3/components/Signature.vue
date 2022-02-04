@@ -178,8 +178,8 @@
     created: function(){
       if(this.leftTitle[0] === 'Docente')
       {
-        console.log("this.innerRefs");
-        console.log(this.innerRefs);
+        // console.log("this.innerRefs");
+        // console.log(this.innerRefs);
       }
       // ref for input v-models -> innerRefs[0])[leftTitle.indexOf(title)]" v-model="innerRefs[0][Object.keys(innerRefs[0])[leftTitle.indexOf(title)]]
     }, 

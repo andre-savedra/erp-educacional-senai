@@ -16,6 +16,11 @@
             ['Turma:', 'Nº:', 'Data:'], //line 2
             ['Docente:', 'Disciplina:'], //line 3
           ]"
+          :itemsDisabled="[
+            ['false'], //line 1
+            ['true', 'true', 'true'], //line 2
+            ['true', 'false'], //line 3
+          ]"
           :idUser="idStudentSearch"
           @update="fiap_data_att.identification = $event"
           :innerRefs="fiap_data_att.identification"
@@ -189,7 +194,7 @@ export default {
       sendVerify: 1,
       idFiapSearch: "",
       idStudentSearch: null,
-      idUserSearch: 1,
+      idUserSearch: 3,
       idSubjectSearch: 1,
       mainData: {},
       isEditing: true,
@@ -425,10 +430,10 @@ export default {
           .nome;
       }
     },
-    getUser: async function (userID) {
-      this.fiap_data_att.NON_CHANGEBLE_DATA.professor.id = userID;
-      const userResponse = await axios.get(this.BASE_URL + "usuario/" + userID);
-      this.fiap_data_att.identification[2].docente = userResponse.data.nome;
+    getUser: async function (userID) {      
+      const userResponse = await axios.get(this.BASE_URL + "usuario/" + (userID-1));
+      this.fiap_data_att.NON_CHANGEBLE_DATA.professor.id = userResponse.data[0].id;
+      this.fiap_data_att.identification[2].docente = userResponse.data[0].nome;
     },
     getSubject: async function (subjectID) {
       this.fiap_data_att.NON_CHANGEBLE_DATA.materia.id = subjectID;
@@ -907,7 +912,6 @@ export default {
     if (this.$route.params.token != undefined) {
       this.idStudentSearch = this.$route.params.idAluno;
       this.commitMethod = this.$route.params.mthd;
-      console.log("this.$route.params.mthd",this.$route.params.mthd);
       this.idFiapSearch = this.$route.params.fiapID;
       this.getFiap(this.$route.params.fiapID);
       console.log("IFFFFFFFFFFFFFFFFFFF");

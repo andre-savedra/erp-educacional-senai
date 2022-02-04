@@ -20,7 +20,8 @@
           :key="item[0]"
         >
         <!-- @input="handleInput" -->
-          <input  v-for="i in item" v-if="!(i === 'Aluno:')"  type="text"  :placeholder="i"  :key="i" v-model="innerRefs[items.indexOf(item)][Object.keys(innerRefs[items.indexOf(item)])[[item.indexOf(i)]]]"/>
+          <input  v-for="i in item" v-if="!(i === 'Aluno:')"  type="text"  :placeholder="i"  :key="i" v-model="innerRefs[items.indexOf(item)][Object.keys(innerRefs[items.indexOf(item)])[[item.indexOf(i)]]]"
+          :disabled="(itemsDisabled[items.indexOf(item)][Object.keys(itemsDisabled[items.indexOf(item)])[[item.indexOf(i)]]]) == 'true'"/>
           <SearchFilter :idUser="idUser"  v-else />
         <!-- innerRefs[items.indexOf(item)][Object.keys(innerRefs[items.indexOf(item)])[[item.indexOf(i)]]]-->
         </div>
@@ -166,7 +167,7 @@
 // import { mapMutations } from "vuex";
 
 export default {
-  props: ["title", "items", "type", "hiddenContent", "innerRefs","idUser"],
+  props: ["title", "items", "type", "hiddenContent", "innerRefs", "idUser", "itemsDisabled"],
   data: function () {
 
     return {
