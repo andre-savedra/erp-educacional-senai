@@ -36,14 +36,15 @@ class Aluno(models.Model):
 
 class Usuario(models.Model):
     nome = models.CharField(max_length=50)
-    identificador = models.CharField(max_length=30)
-    senha = models.CharField(max_length=50)
+    idUserFK = models.BigIntegerField(default=0)
+    email = models.CharField(max_length=50, default="")
+    ativo = models.BooleanField(default=False, null=True, blank=True)
     nivelAcesso = models.CharField(max_length=15, default='1',
                     choices=(('1','Aluno'),
                              ('2','Professor'),
                              ('3','Analista'),
                              ('4','Coordenador')))
-    
+
     def __str__(self):
         return self.nome
 

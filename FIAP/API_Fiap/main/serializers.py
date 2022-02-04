@@ -31,9 +31,10 @@ class UsuarioSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'nome',
-            'identificador',
-            'senha',
+            'idUserFK',
+            'email',
             'nivelAcesso',
+            'ativo'
         ]
 
 class MateriaSerializer(serializers.ModelSerializer):

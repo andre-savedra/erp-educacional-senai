@@ -102,8 +102,8 @@ class UsuarioAPIView(APIView):
             serializer = UsuarioSerializer(colab, many=True)
             return Response(serializer.data)
         else:
-            colab = Usuario.objects.get(id=pk) #changed
-            serializer = UsuarioSerializer(colab)
+            colab = Usuario.objects.filter(nivelAcesso=pk) #changed
+            serializer = UsuarioSerializer(colab, many=True)
             return Response(serializer.data)
 
 

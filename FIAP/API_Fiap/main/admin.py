@@ -8,7 +8,7 @@ class detAluno(admin.ModelAdmin):
     list_per_page = 10
 
 class detColaborador(admin.ModelAdmin):
-    list_display = ('id','nome','identificador','senha','nivelAcesso')
+    list_display = ('id','nome','idUserFK','email','nivelAcesso', 'ativo')
     list_display_links = ('id',)
     search_fields = ('nome',)
     list_per_page = 10
