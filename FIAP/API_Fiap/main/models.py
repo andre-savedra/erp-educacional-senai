@@ -43,7 +43,7 @@ class Usuario(models.Model):
                              ('2','Professor'),
                              ('3','Analista'),
                              ('4','Coordenador')))
-
+    
     def __str__(self):
         return self.nome
 

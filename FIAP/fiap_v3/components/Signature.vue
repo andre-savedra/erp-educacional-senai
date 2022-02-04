@@ -14,7 +14,7 @@
       :key="title"
     >
       <label>{{ title }}:</label>
-      <input  type="text" :id="Object.keys(innerRefs[0])[leftTitle.indexOf(title)]+'Date'" v-model="innerRefs[0][Object.keys(innerRefs[0])[leftTitle.indexOf(title)]].date"  />
+      <input  type="text" :id="Object.keys(innerRefs[0])[leftTitle.indexOf(title)]+'Date'" v-model="innerRefs[0][Object.keys(innerRefs[0])[leftTitle.indexOf(title)]].date" disabled />
       <input
       
       readonly="readonly"

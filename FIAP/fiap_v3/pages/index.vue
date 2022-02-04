@@ -564,9 +564,9 @@ export default {
         };
 
         await axios({
-          method: this.commitMethod,
+          method: 'POST',
           url: this.BASE_URL + "materia/",
-          data: this.commitMethod === "POST" ? [this.mainData] : this.mainData,
+          data: [this.mainData],
           headers: {
             "Content-Type": "application/json",
           },
@@ -907,6 +907,7 @@ export default {
     if (this.$route.params.token != undefined) {
       this.idStudentSearch = this.$route.params.idAluno;
       this.commitMethod = this.$route.params.mthd;
+      console.log("this.$route.params.mthd",this.$route.params.mthd);
       this.idFiapSearch = this.$route.params.fiapID;
       this.getFiap(this.$route.params.fiapID);
       console.log("IFFFFFFFFFFFFFFFFFFF");
