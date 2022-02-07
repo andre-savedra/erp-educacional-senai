@@ -15,13 +15,15 @@
             ['Aluno:'], //line 1
             ['Turma:', 'Nº:', 'Data:'], //line 2
             ['Docente:', 'Disciplina:'], //line 3
+            ['Analista:'], //line 4
           ]"
           :itemsDisabled="[
             ['false'], //line 1
-            ['true', 'true', 'true'], //line 2
+            ['true', 'true', 'true'], //line 2  
             ['true', 'false'], //line 3
+            ['false'], //line 4
           ]"
-          :idUser="idStudentSearch"
+          :idUser="[idStudentSearch, false, false, idAnalistSearch]"
           @update="fiap_data_att.identification = $event"
           :innerRefs="fiap_data_att.identification"
         />
@@ -32,6 +34,9 @@
           :hiddenContent="true"
           :items="[
             ['Aulas previstas:', 'Ausências:'], //line 1
+          ]"
+          :itemsDisabled="[
+            ['false', 'false']
           ]"
           @update="fiap_data_att.frequency = $event"
           :innerRefs="fiap_data_att.frequency"
@@ -44,6 +49,10 @@
           :items="[
             ['Unidade avaliada:'], //line 1
             ['Nota média da turma:', 'Nota do aluno:', 'Nota de recuperação:'], //line 2
+          ]"
+          :itemsDisabled="[
+            ['false'],
+            ['false', 'false', 'false']
           ]"
           @update="fiap_data_att.schoolarEnjoyment = $event"
           :innerRefs="fiap_data_att.schoolarEnjoyment"
@@ -194,6 +203,7 @@ export default {
       sendVerify: 1,
       idFiapSearch: "",
       idStudentSearch: null,
+      idAnalistSearch: null,
       idUserSearch: 3,
       idSubjectSearch: 1,
       mainData: {},
@@ -216,6 +226,10 @@ export default {
           {
             docente: null,
             disciplina: null,
+          },
+          // Row 4 index 3
+          {
+            analista: null,
           },
         ],
         frequency: [
@@ -297,6 +311,9 @@ export default {
           turma: {
             id: null,
           },
+          analista: { //added
+            id: null,
+          },
         },
       },
     };
@@ -314,7 +331,7 @@ export default {
     //   console.log(this.fiap_data_att.managerKnowledgement[0].professor.sign)
     // },
     formatNumber: function (input) {
-      if (input >= 0 && input < 9) return "0" + input.toString();
+      if (input >= 0 && input <= 9) return "0" + input.toString();
       else return input.toString();
     },
     formatDate: function (input) {      
@@ -359,8 +376,8 @@ export default {
       } else return input;
     },
 
-    temporizer: function (initiate) {
-      const alunoIDver = document.getElementById("alunoIDver");      
+    temporizer: function (initiate) {      
+      const alunoIDver = document.getElementById("Aluno:");      
       
       if (alunoIDver !== null && this.fiap_data_att.NON_CHANGEBLE_DATA.aluno.id !== alunoIDver.value) 
       {
@@ -369,6 +386,22 @@ export default {
           this.getStudent(this.fiap_data_att.NON_CHANGEBLE_DATA.aluno.id);
         }
       }
+
+      const analistaIDver = document.getElementById("Analista:");
+      
+      if (analistaIDver !== null && this.fiap_data_att.NON_CHANGEBLE_DATA.analista.id !== analistaIDver.value) 
+      {
+        if (initiate !== true) {
+          this.fiap_data_att.NON_CHANGEBLE_DATA.analista.id = analistaIDver.value;
+          this.getAnalist(this.fiap_data_att.NON_CHANGEBLE_DATA.analista.id);          
+        }
+      }
+
+      // console.log("this.fiap_data_att.NON_CHANGEBLE_DATA.analista.id", this.fiap_data_att.NON_CHANGEBLE_DATA.analista.id);
+      // console.log("this.fiap_data_att.identification[3].analista", this.fiap_data_att.identification[3].analista);
+      // console.log("this.idAnalistSearch",this.idAnalistSearch);
+      // console.log(" ");
+
 
       setTimeout(this.temporizer, 1000);
     },
@@ -381,6 +414,7 @@ export default {
       this.getStudent(FiapResponse.data.aluno);
       this.fiap_data_att.NON_CHANGEBLE_DATA.aluno.id = FiapResponse.data.aluno;
       this.idStudentSearch = FiapResponse.data.aluno;
+      
       // Class Data and ID setter
       this.getClass(FiapResponse.data.turma);
       this.fiap_data_att.NON_CHANGEBLE_DATA.turma.id = FiapResponse.data.turma;
@@ -394,6 +428,11 @@ export default {
       this.getSubject(FiapResponse.data.materia);
       this.fiap_data_att.NON_CHANGEBLE_DATA.materia.id =
         FiapResponse.data.materia;
+      
+      // Analist Data da ID setter
+      this.getAnalist(FiapResponse.data.analista);
+      this.fiap_data_att.NON_CHANGEBLE_DATA.analista.id =
+        FiapResponse.data.analista;
 
       // Fiap Remainings usage based on ID FIAP
       this.getFrequency(fiapID);
@@ -431,9 +470,14 @@ export default {
       }
     },
     getUser: async function (userID) {      
-      const userResponse = await axios.get(this.BASE_URL + "usuario/" + (userID-1));
+      const userResponse = await axios.get(this.BASE_URL + "usuario/" + userID);
       this.fiap_data_att.NON_CHANGEBLE_DATA.professor.id = userResponse.data[0].id;
       this.fiap_data_att.identification[2].docente = userResponse.data[0].nome;
+    },
+    getAnalist: async function (analistID) {
+      const userResponse = await axios.get(this.BASE_URL + "analista/" + analistID);
+      this.fiap_data_att.NON_CHANGEBLE_DATA.analista.id = userResponse.data[0].id;
+      this.fiap_data_att.identification[3].analista = userResponse.data[0];
     },
     getSubject: async function (subjectID) {
       this.fiap_data_att.NON_CHANGEBLE_DATA.materia.id = subjectID;
@@ -608,6 +652,7 @@ export default {
         dataInicio: this.formatDate(this.fiap_data_att.identification[1].data),
         // dataFinal: this.formatDate(this.fiap_data_att.identification[1].data),
         usuario: this.fiap_data_att.NON_CHANGEBLE_DATA.professor.id,
+        analista: this.fiap_data_att.NON_CHANGEBLE_DATA.analista.id,
       };
 
       console.log("main data:");
@@ -907,12 +952,12 @@ export default {
     },
   },
   created() {
-    // console.log("this.$route.params");
-    // console.log(this.$route.params);
+    
     if (this.$route.params.token != undefined) {
       this.idStudentSearch = this.$route.params.idAluno;
       this.commitMethod = this.$route.params.mthd;
       this.idFiapSearch = this.$route.params.fiapID;
+      this.idAnalistSearch = this.$route.params.idAnalista;
       this.getFiap(this.$route.params.fiapID);
       console.log("IFFFFFFFFFFFFFFFFFFF");
     } else {

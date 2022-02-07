@@ -33,6 +33,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'nome',
             'idUserFK',
             'email',
+            'phone',
             'nivelAcesso',
             'ativo'
         ]
@@ -75,6 +76,7 @@ class FiapSerializer(serializers.ModelSerializer):
             'dataInicio',
             'dataFinal',
             'usuario',
+            'analista',
         ]
 
 class FrequenciaSerializer(serializers.ModelSerializer):

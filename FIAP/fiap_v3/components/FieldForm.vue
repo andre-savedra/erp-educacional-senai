@@ -8,22 +8,25 @@
     <div class="content" v-if="vReff || !hiddenContent">
       <div class="box" v-if="type == 'checks'">
         <div class="check-item" v-for="item in items" :key="item">
-          <input type="checkbox" v-model="innerRefs[0][Object.keys(innerRefs[0])[items.indexOf(item)]]" />
+          <input
+            type="checkbox"
+            v-model="
+              innerRefs[0][Object.keys(innerRefs[0])[items.indexOf(item)]]
+            "
+          />
           <span>{{ item }}</span>
         </div>
       </div>
 
       <div v-else-if="type == 'rows'">
-        <div
-          :class="'row r-' + item.length"
-          v-for="item in items"
-          :key="item[0]"
-        >
-        <!-- @input="handleInput" -->
-          <input  v-for="i in item" v-if="!(i === 'Aluno:')"  type="text"  :placeholder="i"  :key="i" v-model="innerRefs[items.indexOf(item)][Object.keys(innerRefs[items.indexOf(item)])[[item.indexOf(i)]]]"
-          :disabled="(itemsDisabled[items.indexOf(item)][Object.keys(itemsDisabled[items.indexOf(item)])[[item.indexOf(i)]]]) == 'true'"/>
-          <SearchFilter :idUser="idUser"  v-else />
-        <!-- innerRefs[items.indexOf(item)][Object.keys(innerRefs[items.indexOf(item)])[[item.indexOf(i)]]]-->
+        <div :class="'row r-' + item.length" v-for="item in items" :key="item[0]">
+          <!-- @input="handleInput" -->
+          <input v-for="i in item" v-if="i !== 'Aluno:' && i !== 'Analista:' && itemsDisabled !== false"
+            type="text" :placeholder="i" :key="i" v-model="innerRefs[items.indexOf(item)][Object.keys(innerRefs[items.indexOf(item)])[[item.indexOf(i)]]]"
+            :disabled="itemsDisabled[items.indexOf(item)][Object.keys(itemsDisabled[items.indexOf(item)])[[item.indexOf(i)]]] == 'true'"
+          />          
+          <SearchFilter :type="i" :idUser="idUser[items.indexOf(item)]" v-else-if="i === 'Aluno:'" />
+          <SearchFilter :type="i" :idUser="idUser[items.indexOf(item)]" v-else-if="i === 'Analista:'" />
         </div>
       </div>
       <div v-else>
@@ -32,13 +35,24 @@
           v-for="item in items"
           :key="item[0]"
         >
-        <!-- @input="handleInput" -->
-          <textarea   v-for="i in item"  type="text" class="large-input" rows="7" :placeholder="i"  :key="i" v-model="innerRefs[items.indexOf(item)][Object.keys(innerRefs[items.indexOf(item)])[[item.indexOf(i)]]]"/>
+          <!-- @input="handleInput" -->
+          <textarea
+            v-for="i in item"
+            type="text"
+            class="large-input"
+            rows="7"
+            :placeholder="i"
+            :key="i"
+            v-model="
+              innerRefs[items.indexOf(item)][
+                Object.keys(innerRefs[items.indexOf(item)])[[item.indexOf(i)]]
+              ]
+            "
+          />
 
-        <!-- innerRefs[items.indexOf(item)][Object.keys(innerRefs[items.indexOf(item)])[[item.indexOf(i)]]]-->
+          <!-- innerRefs[items.indexOf(item)][Object.keys(innerRefs[items.indexOf(item)])[[item.indexOf(i)]]]-->
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -110,8 +124,8 @@
       padding: 0.6rem 1rem;
       border-radius: 0.1rem;
     }
-    textarea{
-     //resize: none 
+    textarea {
+      //resize: none
     }
 
     &.r-1 {
@@ -141,7 +155,6 @@
 }
 
 @media (max-width: 720px) {
-
   .dropdown-wrapper {
     margin-bottom: 10px;
     width: 100%;
@@ -154,12 +167,12 @@
   .sheet .content .row {
     margin-bottom: 0;
     flex-direction: column;
-    input, textarea {
+    input,
+    textarea {
       margin-bottom: 10px;
       width: 100%;
     }
   }
-
 }
 </style>
 
@@ -167,41 +180,40 @@
 // import { mapMutations } from "vuex";
 
 export default {
-  props: ["title", "items", "type", "hiddenContent", "innerRefs", "idUser", "itemsDisabled"],
+  props: [
+    "title",
+    "items",
+    "type",
+    "hiddenContent",
+    "innerRefs",
+    "idUser",
+    "itemsDisabled",
+  ],
   data: function () {
-
     return {
       vReff: false,
-
     };
   },
   methods: {
     // ...mapMutations(["changeCheck"]),
-    updateVal: function (e) {
-
-    }
+    updateVal: function (e) {},
   },
-  computed: {
-
-  },
+  computed: {},
   watch: {
     // vReff: function(){
     //     if(this.vReff === false)
     //     {
     //       //clean all fields
     //       // this.innerRefs = this.innerRefOriginal;
-         
     //     }
     // }
   },
-  created(){
+  created() {
     // v-model for select -> innerRefs[0][Object.keys(innerRefs[0])[items.indexOf(item)]]
     //this.$props.innerRefs[this.$props.items.indexOf(item)][Object.keys(innerRefs[item.indexOf(i)])]
     // v-model for input -> innerRefs[items.indexOf(item)][Object.keys(innerRefs[items.indexOf(item)])[[item.indexOf(i)]]]
     //Object.keys(innerRefs[items.indexOf(item)])[[item.indexOf(i)]]
     //innerRefs[items.indexOf(item)][item.indexOf(i)]
-  }
-
-
+  },
 };
 </script>

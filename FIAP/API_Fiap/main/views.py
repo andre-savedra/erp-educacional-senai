@@ -102,7 +102,7 @@ class UsuarioAPIView(APIView):
             serializer = UsuarioSerializer(colab, many=True)
             return Response(serializer.data)
         else:
-            colab = Usuario.objects.filter(nivelAcesso=pk) #changed
+            colab = Usuario.objects.filter(id=pk) #changed
             serializer = UsuarioSerializer(colab, many=True)
             return Response(serializer.data)
 
@@ -115,6 +115,40 @@ class UsuarioAPIView(APIView):
         #return Response({"id": serializer.data['id']})
         # return Response(serializer.data, status=status.HTTP_201_
 
+    def put(self, request, pk=''):
+        colab = Usuario.objects.get(id=pk)
+        serializer = UsuarioSerializer(colab, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, pk=''):
+        colab = Usuario.objects.get(id=pk)
+        colab.delete()
+        return Response('Colaborador Apagado')
+
+
+class AnalistaAPIView(APIView):
+    """
+    API Analista
+    """
+
+    def get(self, request, pk=''):
+        if pk == '':
+            colab = Usuario.objects.filter(nivelAcesso=3)
+            serializer = UsuarioSerializer(colab, many=True)
+            return Response(serializer.data)
+        else:
+            colab = Usuario.objects.filter(id=pk)
+            serializer = UsuarioSerializer(colab, many=True)
+            return Response(serializer.data)
+
+    def post(self, request):
+        serializer = UsuarioSerializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"msg": "Inserido com sucesso"})
+        
     def put(self, request, pk=''):
         colab = Usuario.objects.get(id=pk)
         serializer = UsuarioSerializer(colab, data=request.data)

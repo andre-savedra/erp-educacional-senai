@@ -6,7 +6,7 @@
         p-d-flex p-flex-column p-jc-center p-ai-center p-text-center
       "
     >
-      <img src="../assets/media/suga.png" />
+      <img src="../assets/media/sge.jpeg" />
       <h1>Sistema de Gestão Escolar</h1>
     </section>
     <section class="Cadastro_panel">
@@ -165,7 +165,7 @@ img {
   margin-top: 0px;
   align-items: center;
   display: flex;
-  width: 70%;
+  width: 65%;
   height: 45%;
   // min-width: 150px;
   // min-height: 150px;

@@ -11,6 +11,9 @@ urlpatterns = [
     path('usuario/', UsuarioAPIView.as_view(), name='usuario'),
     path('usuario/<int:pk>/', UsuarioAPIView.as_view(), name='usuarioParameters'),
 
+    path('analista/', AnalistaAPIView.as_view(), name='analista'),
+    path('analista/<int:pk>/', AnalistaAPIView.as_view(), name='analistaParameters'),
+
     path('materia/', MateriaAPIView.as_view(), name='materia'),
     path('materia/<int:pk>/', MateriaAPIView.as_view(), name='materiaParameters'),
 

@@ -38,6 +38,7 @@ class Usuario(models.Model):
     nome = models.CharField(max_length=50)
     idUserFK = models.BigIntegerField(default=0)
     email = models.CharField(max_length=50, default="")
+    phone = models.CharField(max_length=15, default="")
     ativo = models.BooleanField(default=False, null=True, blank=True)
     nivelAcesso = models.CharField(max_length=15, default='1',
                     choices=(('1','Aluno'),
@@ -65,8 +66,9 @@ class Fiap(models.Model):
     turma = models.ForeignKey(Turma, on_delete=models.CASCADE, null=True, blank=True)
     materia = models.ForeignKey(Materia, on_delete=models.CASCADE, null=True)
     dataInicio = models.DateTimeField(default=timezone.now())
-    dataFinal = models.DateTimeField(null=True, default=timezone.now())
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True)
+    dataFinal = models.DateTimeField(null=True)
+    usuario = models.ForeignKey(Usuario, related_name="user", on_delete=models.CASCADE, null=True)
+    analista = models.ForeignKey(Usuario, related_name="analist", on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return str(self.id)

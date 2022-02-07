@@ -6,6 +6,7 @@
           <div class="row number-fiap">
             <p class="basic-text"># {{ data.id }}</p>
           </div>
+          
           <div class="row student">
             <div class="name">
               <p class="basic-text">Aluno:</p>
@@ -32,10 +33,14 @@
         <div class="content">
           <div class="teacher">
             <p class="basic-text">Professor:</p>
-            <p class="name-teacher">{{ nomeUsuario }}</p>
+            <p class="name-teacher">André Felipe Savedra Cruz</p>          
+          </div>
+          <div class="analist">  
+            <p class="basic-text">Analista:</p>
+            <p class="name-analist">{{ analista.nome }}</p>
           </div>
           <div class="reason">
-            <p class="basic-text">Motivo:</p>
+            <p class="basic-text">Observações:</p>
             <p class="basic-text text reason" style="font-size: 14px;">
               {{observacao}}
             </p>
@@ -58,6 +63,7 @@
         idFiap: '',
         BASE_URL:"http://localhost:8000/",
         observacao: '',
+        analista: '',
       }
     },
     methods: {
@@ -73,22 +79,37 @@
         const turmaResponse = await axios.get(this.BASE_URL + "turma/" + this.$props.data.turma +"/")
         this.nomeTurma = turmaResponse.data.cod_turma;
       },
+      fetchAnalista: async function(){
+        if(this.$props.data.analista !== null && this.$props.data.analista !== undefined)
+        {
+          const analistaResponse = await axios.get(this.BASE_URL + "analista/" + this.$props.data.analista +"/")
+          this.analista = analistaResponse.data[0];
+          console.log("analistaaaa",analistaResponse.data[0]);
+        }
+      },
       editFiap: function(idFiap){
-        this.$router.push({ name: 'index', params:{token: '_aSa12c@#DA',fiapID: idFiap, mthd: 'PUT', idAluno: this.$props.data.aluno } })
+        this.$router.push({ name: 'index', 
+          params:{token: '_aSa12c@#DA', fiapID: idFiap, mthd: 'PUT', 
+                  idAluno: this.$props.data.aluno,  idAnalista: this.analista.id  } })
       },
       fiapObs: async function(){
         const obsResponse = await axios.get(this.BASE_URL + "observacao/" +  this.$props.data.id +"/");
-        this.observacao = obsResponse.data.observacao;
+        if(obsResponse.data.observacao.length > 25)
+          this.observacao = obsResponse.data.observacao.substring(0,25) + "...";
+        else
+          this.observacao = obsResponse.data.observacao;
       },
     },
     mounted() {
       this.fetchIdAluno(),
       this.fetchIdUsuario(),
       this.fetchIdTurma(),
+      this.fetchAnalista(),
       this.fiapObs()
     }
   }
 </script>
+
 
 <style lang="scss" scoped>
   @mixin d-flex($align, $just, $dir) {
@@ -102,8 +123,13 @@
     color: $color-basic;
     font-size: 1.25rem;
   }
-  .name-student, .name-teacher {
+  .name-student {
     font-size: 2.2rem;
+    color: #545454;
+    margin-left: .5rem;
+  }
+  .name-teacher, .name-analist {
+    font-size: 1.5rem;
     color: #545454;
     margin-left: .5rem;
   }
@@ -162,10 +188,30 @@
           cursor: pointer;
           height: 28px;
           width: 28px;
-          &.edit { background: #FF8A00; }
-          &.print { background: #005CB0; }
-          &.trash { background: #E30613; }
-          &.arrow { background: #02A909; }
+          &.edit { 
+              background: #FF8A00;            
+              &:hover{
+                background: #ffb056;              
+              }             
+            }
+          &.print { 
+              background: #005CB0; 
+              &:hover{
+                background: #3894e9; 
+              }             
+            }
+          &.trash { 
+              background: #E30613; 
+              &:hover{
+                background: #fa5964; 
+              }             
+            }
+          &.arrow { 
+              background: #02A909; 
+              &:hover{
+                background: #42cf49; 
+              }             
+            }
         }
       }
     }
@@ -189,7 +235,7 @@
       }
       .teacher {
         margin-left: 81.875px;
-        @include d-flex(baseline, initial, row);
+        @include d-flex(baseline, initial, column);
       }
       &.active {
         padding-top: 150px;
