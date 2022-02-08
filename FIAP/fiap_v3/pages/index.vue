@@ -645,7 +645,7 @@ export default {
 
     saveFiap: async function () {
       this.mainData = {
-        progresso: "1",
+        progresso: "3",
         aluno: this.fiap_data_att.NON_CHANGEBLE_DATA.aluno.id,
         turma: this.fiap_data_att.NON_CHANGEBLE_DATA.turma.id,
         materia: this.fiap_data_att.NON_CHANGEBLE_DATA.materia.id,

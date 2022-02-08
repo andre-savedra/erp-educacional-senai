@@ -63,6 +63,8 @@ export default {
       } else { return 'black' }
     },
     isLoading: function() {
+
+      
       return this.type === 'load'
     },
     isError: function() {
